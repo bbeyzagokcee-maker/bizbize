@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f8fa">
+  <title>Biz Bize — İstatistiksel Analiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jstat@1.9.6/dist/jstat.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Biz Bize ana sayfa">
+      <span class="brand-mark">B</span>
+      <span>Biz <span class="brand-light">Bize</span></span>
+    </a>
+    <nav class="site-nav" aria-label="Ana gezinme">
+      <a href="#features">Özellikler</a>
+      <a href="#analizler">Analizler</a>
+      <a href="#privacyInfo">Gizlilik</a>
+      <a href="#sss">SSS</a>
+    </nav>
+    <div class="topbar-right">
+      <span class="privacy-pill"><span class="privacy-dot"></span> Dosyanız cihazınızda kalır</span>
+      <a class="nav-cta" href="#uploadPanel">Çalışmaya başla <span aria-hidden="true">→</span></a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-content">
+        <span class="hero-kicker"><span class="kicker-dot"></span> ÜCRETSİZ İSTATİSTİKSEL ANALİZ</span>
+        <h1>Araştırma verinizi<br><span>güvenle analiz edin.</span></h1>
+        <p class="hero-copy">CSV ve Excel dosyanızı açın; temel istatistiklerden ileri analizlere kadar tüm süreci tek çalışma alanında yönetin. Dosyanız cihazınızdan ayrılmaz.</p>
+        <div class="hero-actions">
+          <a class="hero-primary" href="#uploadPanel">Veri setinizi açın <span aria-hidden="true">→</span></a>
+          <a class="hero-secondary" href="#analizler">Analizleri inceleyin</a>
+        </div>
+        <p class="hero-note">CSV ve Excel desteği <span aria-hidden="true">·</span> Tarayıcıda analiz <span aria-hidden="true">·</span> Hesap gerekmez</p>
+      </div>
+      <div class="product-preview" aria-label="Biz Bize analiz çalışma alanı önizlemesi">
+        <div class="preview-window">
+          <div class="preview-titlebar">
+            <div class="preview-dots"><i></i><i></i><i></i></div>
+            <span>Biz Bize <b>·</b> çalışma alanı</span>
+            <span class="preview-menu">•••</span>
+          </div>
+          <div class="preview-tabs"><b>Veri</b><span>Analizler</span><span>Grafikler</span><span>R / İleri</span></div>
+          <div class="preview-body">
+            <div class="preview-grid">
+              <div class="preview-grid-head"><span></span><b>Yaş</b><b>Grup</b><b>Puan</b></div>
+              <div><span>1</span><i>24</i><i>A</i><i>82</i></div>
+              <div><span>2</span><i>31</i><i>B</i><i>76</i></div>
+              <div><span>3</span><i>28</i><i>A</i><i>91</i></div>
+              <div><span>4</span><i>35</i><i>B</i><i>85</i></div>
+              <div><span>5</span><i>22</i><i>A</i><i>88</i></div>
+              <div><span>6</span><i>29</i><i>B</i><i>79</i></div>
+              <div class="preview-grid-foot">Örnek veri görünümü</div>
+            </div>
+            <div class="preview-results">
+              <div class="preview-result-heading"><span class="preview-analysis-icon">ƒ</span><div><b>Bağımsız örneklem t-testi</b><small>Örnek sonuç görünümü</small></div></div>
+              <div class="preview-result-table">
+                <div><b>Değişken</b><b>t</b><b>p</b></div>
+                <div><span>Puan</span><span>2.41</span><span class="preview-significant">.032</span></div>
+              </div>
+              <div class="preview-chart">
+                <div class="preview-chart-label">Grup ortalamaları</div>
+                <div class="chart-y-axis"><span>90</span><span>80</span><span>70</span></div>
+                <div class="chart-plot">
+                  <span class="chart-gridline"></span><span class="chart-gridline"></span><span class="chart-gridline"></span>
+                  <span class="chart-bar bar-one"></span><span class="chart-bar bar-two"></span>
+                  <span class="chart-x-label label-one">A</span><span class="chart-x-label label-two">B</span>
+                </div>
+              </div>
+              <div class="preview-result-foot"><span class="preview-status-dot"></span> Analiz tamamlandı</div>
+            </div>
+          </div>
+        </div>
+        <div class="preview-float"><span>↗</span><div><b>Sonuçlarınız hazır</b><small>Bir tıkla dışa aktarın</small></div></div>
+      </div>
+    </section>
+
+    <section id="uploadPanel" class="upload-panel">
+      <div id="dropZone" class="drop-zone">
+        <input id="fileInput" type="file" accept=".csv,.xlsx,.xls" hidden>
+        <div class="upload-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v3A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="upload-text">
+          <h2>Veri setinizi buraya bırakın</h2>
+          <p>veya <button id="browseButton" class="text-button" type="button">dosya seçin</button></p>
+          <span class="file-hint">CSV veya Excel (.xlsx, .xls) · Dosya sunucuya yüklenmez</span>
+        </div>
+      </div>
+    </section>
+    <p id="uploadError" class="error-message" role="alert" hidden></p>
+
+    <section id="features" class="feature-band" aria-label="Biz Bize özellikleri">
+      <div class="feature-intro"><span>ANALİZİNİZ İÇİN</span><strong>İhtiyacınız olan araçlar,<br>tek bir çalışma alanında.</strong></div>
+      <article class="feature-item"><span class="feature-icon feature-icon-blue">▤</span><div><strong>Verinizi içe aktarın</strong><small>CSV ve Excel dosyalarıyla çalışın.</small></div></article>
+      <article class="feature-item"><span class="feature-icon feature-icon-green">∑</span><div><strong>Analiz edin</strong><small>İstatistik ve grafik araçlarını keşfedin.</small></div></article>
+      <article class="feature-item"><span class="feature-icon feature-icon-purple">↗</span><div><strong>Sonuçları paylaşın</strong><small>Tablo ve raporları dışa aktarın.</small></div></article>
+    </section>
+
+    <!-- ===== Karşılama sayfası ek bölümleri (veri yüklenince gizlenir) ===== -->
+
+    <section class="landing-section" aria-label="Rakamlarla Biz Bize">
+      <div class="stats-strip">
+        <div><strong>16</strong><span>hazır istatistiksel analiz, tek tıkla</span></div>
+        <div><strong>7</strong><span>grafik türü, PNG olarak indirilebilir</span></div>
+        <div><strong>10</strong><span>ileri analiz şablonu: faktör analizi, SEM, meta-analiz ve daha fazlası</span></div>
+        <div><strong>0</strong><span>sunucuya gönderilen veri satırı</span></div>
+      </div>
+    </section>
+
+    <section id="nasil" class="landing-section">
+      <div class="section-head">
+        <span class="section-kicker">Nasıl çalışır</span>
+        <h2 class="section-title">Dosyadan rapora dört adım.</h2>
+        <p class="section-lead">Kurulum ya da hesap gerekmez. Dosyanızı açtığınız anda çalışma alanı hazır olur.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Verinizi açın</h3><p>CSV veya Excel dosyanızı sürükleyip bırakın. Excel'de birden fazla sayfa varsa istediğinizi seçebilirsiniz.</p></li>
+        <li><h3>Değişkenleri kontrol edin</h3><p>Her sütunun türünü (sayısal, nominal, sıralı, ID) başlıktan değiştirin; gerekirse hücreleri doğrudan düzenleyin.</p></li>
+        <li><h3>Analizi seçin</h3><p>Listeden testi seçin, değişkenleri belirleyin ve çalıştırın. Sonuçlar tablo olarak anında görünür.</p></li>
+        <li><h3>Dışa aktarın</h3><p>Sonuçları CSV, Excel veya PDF raporu olarak; grafikleri PNG olarak kaydedin.</p></li>
+      </ol>
+    </section>
+
+    <section id="analizler" class="landing-section">
+      <div class="section-head">
+        <span class="section-kicker">Analiz kataloğu</span>
+        <h2 class="section-title">Ödevden teze, ihtiyaç duyacağınız testler hazır.</h2>
+        <p class="section-lead">Yaygın kullanılan parametrik ve parametrik olmayan testlerin yanında, R motoruyla ileri düzey modeller de çalışma alanınızda.</p>
+      </div>
+      <div class="catalog">
+        <article class="catalog-card">
+          <header><span class="catalog-icon symbol-blue">∑</span><h3>Veriyi tanıma</h3></header>
+          <p>Analize başlamadan önce veri setinizin yapısını, dağılımını ve ölçeklerinizin güvenilirliğini inceleyin.</p>
+          <ul class="chip-list">
+            <li>Tanımlayıcı istatistikler</li>
+            <li>Cronbach alfa / McDonald omega</li>
+            <li>Temel bileşenler analizi (PCA)</li>
+          </ul>
+        </article>
+        <article class="catalog-card">
+          <header><span class="catalog-icon symbol-green">⇄</span><h3>Grup karşılaştırma</h3></header>
+          <p>İki veya daha fazla grubun ortalamalarını ya da sıralamalarını karşılaştırın. Her teste parametrik olmayan bir karşılık da var.</p>
+          <ul class="chip-list">
+            <li>Bağımsız örneklem t-testi (Welch)</li>
+            <li>Bağımlı örneklem t-testi</li>
+            <li>Tek örneklem t-testi</li>
+            <li>Tek yönlü ANOVA</li>
+            <li>Tekrarlı ölçümler ANOVA</li>
+            <li>Mann–Whitney U</li>
+            <li>Kruskal–Wallis</li>
+            <li>Wilcoxon işaretli sıralar</li>
+          </ul>
+        </article>
+        <article class="catalog-card">
+          <header><span class="catalog-icon symbol-violet">↗</span><h3>İlişki ve tahmin</h3></header>
+          <p>Değişkenler arasındaki ilişkiyi ölçün, bir sonucu başka değişkenlerle açıklayın ya da kategorik değişkenleri çapraz tabloda test edin.</p>
+          <ul class="chip-list">
+            <li>Pearson korelasyonu</li>
+            <li>Spearman korelasyonu</li>
+            <li>Doğrusal regresyon</li>
+            <li>Lojistik regresyon</li>
+            <li>Ki-kare testi ve çapraz tablo</li>
+          </ul>
+        </article>
+        <article class="catalog-card">
+          <header><span class="catalog-icon symbol-amber">R</span><h3>İleri analizler (R)</h3></header>
+          <p>WebAssembly R tarayıcınızda çalışır. Hazır şablonu seçin ya da kendi R kodunuzu yazın; veri setiniz <code>data</code> adıyla hazırdır.</p>
+          <ul class="chip-list chips-accent">
+            <li>Açımlayıcı faktör analizi</li>
+            <li>Doğrulayıcı faktör analizi</li>
+            <li>Yapısal eşitlik modeli</li>
+            <li>Aracılık</li>
+            <li>Düzenleyicilik</li>
+            <li>Meta-analiz</li>
+            <li>Bayesçi t-testi</li>
+            <li>Kaplan–Meier sağkalım</li>
+            <li>Doğrusal karma model</li>
+            <li>McDonald omega</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="calisma-alani" class="landing-section">
+      <div class="section-head">
+        <span class="section-kicker">Çalışma alanı</span>
+        <h2 class="section-title">Hazırlıktan görselleştirmeye aynı ekranda.</h2>
+      </div>
+      <div class="split">
+        <article class="split-panel">
+          <h3>Veri hazırlama</h3>
+          <p>Analiz için veriyi ayrı bir programda düzenlemenize gerek kalmaz.</p>
+          <ul class="check-list">
+            <li><strong>Hücreleri düzenleyin.</strong> Değişiklikler özgün dosyanızı etkilemez.</li>
+            <li><strong>Filtreleyin ve sıralayın.</strong> Eşittir, içerir, büyüktür, boştur gibi dokuz koşul.</li>
+            <li><strong>Yeni değişken türetin.</strong> <code>[sınav1] + [sınav2]</code> gibi ifadelerle hesaplanmış sütun ekleyin.</li>
+            <li><strong>Eksik değerleri görün.</strong> Boş hücreler işaretlenir; analizlerde ilgili değişken bazında dışarıda bırakılır.</li>
+          </ul>
+        </article>
+        <article class="split-panel">
+          <h3>Görselleştirme</h3>
+          <p>Dağılımı, ilişkiyi ve grup farklarını görerek anlayın. Grafikleri PNG olarak indirin.</p>
+          <ul class="chip-list chips-accent" style="margin-bottom:18px">
+            <li>Histogram</li><li>Box plot</li><li>Q–Q plot</li><li>Yoğunluk eğrisi</li><li>Violin grafiği</li><li>Dağılım grafiği</li><li>Kategori grafiği</li>
+          </ul>
+          <ul class="check-list">
+            <li><strong>Normallik kontrolü.</strong> Q–Q plot ve yoğunluk eğrisiyle varsayımlarınızı sınayın.</li>
+            <li><strong>Sonuçlarınızı arşivleyin.</strong> Çalıştırdığınız analizler oturum boyunca bir geçmiş tablosunda listelenir.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="landing-section" aria-label="Kimler için">
+      <div class="section-head">
+        <span class="section-kicker">Kimler için</span>
+        <h2 class="section-title">İstatistikle uğraşan herkes için.</h2>
+      </div>
+      <div class="audience">
+        <article><h3>Öğrenciler</h3><p>Ödev ve tez verilerinizi hızlıca analiz edin, sonuç tablolarını raporunuza taşıyın.</p></article>
+        <article><h3>Araştırmacılar</h3><p>Ölçek güvenilirliği, faktör analizi ve karma modeller gibi ileri yöntemlere R ile ulaşın.</p></article>
+        <article><h3>Eğitimciler</h3><p>Derste örnek veri üzerinde testleri ve grafikleri canlı olarak gösterin; kurulum derdi olmadan.</p></article>
+        <article><h3>Analistler</h3><p>Kısa bir Excel dosyasını açıp birkaç dakikada özet, karşılaştırma ve grafik üretin.</p></article>
+      </div>
+    </section>
+
+    <section id="privacyInfo" class="landing-section" aria-label="Gizlilik">
+      <div class="privacy-panel">
+        <span class="section-kicker">Gizlilik</span>
+        <h2 class="section-title">Verileriniz sizde kalır.</h2>
+        <p class="section-lead">Analizler tarayıcınızda çalışır. Dosyanız bir sunucuya yüklenmez, hesap açmanız gerekmez.</p>
+        <div class="privacy-grid">
+          <article><h3>Yerel hesaplama</h3><p>İçe aktarma, istatistik ve grafik işlemlerinin tamamı bu sekmede, cihazınızın belleğinde yapılır.</p></article>
+          <article><h3>Özgün dosya korunur</h3><p>Hücre düzenlemeleri ve hesaplanmış değişkenler yalnızca çalışma alanındaki kopyaya uygulanır.</p></article>
+          <article><h3>R için tek istisna</h3><p>R motorunu ve paketlerini indirmek için internet gerekir. İndirilen yalnızca yazılımdır; veri setiniz gönderilmez.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="sss" class="landing-section">
+      <div class="section-head">
+        <span class="section-kicker">Sık sorulan sorular</span>
+        <h2 class="section-title">Başlamadan önce merak edilenler.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Hangi dosya türlerini açabilirim?</summary><p>CSV, Excel (.xlsx) ve eski Excel (.xls) dosyalarını. Excel dosyasında birden fazla sayfa varsa çalışma alanında sayfa seçebilirsiniz.</p></details>
+        <details><summary>Verilerim bir yere gönderiliyor mu?</summary><p>Hayır. Dosya tarayıcınızda okunur ve analizler orada hesaplanır. R sekmesini kullanırsanız yalnızca R motoru ve paketleri internetten indirilir.</p></details>
+        <details><summary>Eksik değerler analizlerde nasıl ele alınıyor?</summary><p>Eksik hücreler, her analiz için seçtiğiniz değişkenler bazında dışarıda bırakılır. Çalışma alanındaki "Eksik değer" kartı toplam boş hücre sayısını gösterir.</p></details>
+        <details><summary>Bir sütunun değişken türünü değiştirebilir miyim?</summary><p>Evet. Tablo başlığındaki seçimle sütunu sayısal, nominal, sıralı veya ID olarak işaretleyebilirsiniz. Analiz ve grafik listeleri bu türlere göre şekillenir.</p></details>
+        <details><summary>Sonuçlarımı nasıl paylaşırım?</summary><p>Analiz sonuçlarını CSV veya Excel olarak, tüm çalışmayı PDF rapor olarak dışa aktarabilirsiniz. Grafikler PNG olarak indirilir; düzenlediğiniz veri de CSV ya da Excel'e kaydedilebilir.</p></details>
+        <details><summary>R / İleri sekmesi için ne yapmam gerekiyor?</summary><p>"R motorunu başlat" düğmesine basmanız yeterli. Hazır ileri analiz şablonları gereken paketleri ilk çalıştırmada otomatik yükler; yüklenemezse hata aynı sekmede gösterilir.</p></details>
+      </div>
+    </section>
+
+    <section class="landing-section" aria-label="Başlayın">
+      <div class="cta-band">
+        <div>
+          <h2>Verinizle başlayın.</h2>
+          <p>Bir CSV ya da Excel dosyası yeterli. Kurulum ve kayıt yok.</p>
+        </div>
+        <a class="hero-primary" href="#uploadPanel">Veri seti yükle <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <!-- ===== Veri çalışma alanı ===== -->
+
+    <section id="workspace" hidden>
+      <div class="dataset-heading">
+        <div class="dataset-name-wrap">
+          <span class="file-icon">▤</span>
+          <div><h2 id="datasetName">Veri seti</h2><p id="datasetMeta"></p></div>
+        </div>
+        <div class="dataset-actions">
+          <label id="sheetControl" class="sheet-control" hidden>Sayfa <select id="sheetSelect"></select></label>
+          <button id="replaceFileButton" class="button button-light" type="button">Dosyayı değiştir</button>
+        </div>
+      </div>
+
+      <div class="stat-cards">
+        <article class="stat-card"><span class="stat-label">GÖZLEM</span><strong id="rowCount">0</strong><span class="stat-caption">veri satırı</span><span class="stat-symbol symbol-blue">⌗</span></article>
+        <article class="stat-card"><span class="stat-label">DEĞİŞKEN</span><strong id="columnCount">0</strong><span class="stat-caption">sütun</span><span class="stat-symbol symbol-violet">▥</span></article>
+        <article class="stat-card"><span class="stat-label">SAYISAL</span><strong id="numericCount">0</strong><span class="stat-caption">analize uygun</span><span class="stat-symbol symbol-green">∑</span></article>
+        <article class="stat-card"><span class="stat-label">EKSİK DEĞER</span><strong id="missingCount">0</strong><span class="stat-caption">boş hücre</span><span class="stat-symbol symbol-amber">◌</span></article>
+      </div>
+
+      <div class="workspace-layout">
+        <aside class="workspace-sidebar" aria-label="Çalışma alanı gezinmesi">
+          <span class="sidebar-section-label">ÇALIŞMA ALANLARI</span>
+          <nav class="tabs" aria-label="Çalışma alanları">
+            <button class="tab active" data-tab="data" type="button"><span aria-hidden="true">▦</span> Veri</button>
+            <button class="tab" data-tab="analysis" type="button"><span aria-hidden="true">∑</span> Analizler</button>
+            <button class="tab" data-tab="charts" type="button"><span aria-hidden="true">▥</span> Grafikler</button>
+            <button class="tab" data-tab="r" type="button"><span aria-hidden="true">R</span> R / İleri</button>
+          </nav>
+          <div class="sidebar-note">
+            <span class="sidebar-note-mark" aria-hidden="true">✓</span>
+            <div><strong>Yerel çalışma alanı</strong><small>Verileriniz cihazınızda işlenir.</small></div>
+          </div>
+        </aside>
+
+        <div class="workspace-stage">
+          <div class="workspace-toolbar" aria-label="Veri araçları">
+            <div class="toolbar-group">
+              <button id="addRow" class="ribbon-action" type="button"><span aria-hidden="true">＋</span>Satır ekle</button>
+              <button id="exportDataCsv" class="ribbon-action" type="button"><span aria-hidden="true">⇩</span>CSV dışa aktar</button>
+              <button id="exportDataExcel" class="ribbon-action" type="button"><span aria-hidden="true">▦</span>Excel dışa aktar</button>
+            </div>
+            <span class="ribbon-divider"></span>
+            <button id="openDataTools" class="ribbon-action" type="button"><span aria-hidden="true">⚙</span>Veri araçları</button>
+            <span class="toolbar-spacer"></span>
+            <span id="previewLabel" class="muted-label"></span>
+          </div>
+
+          <div class="workspace-canvas">
+      <section id="dataTab" class="tab-panel data-pane">
+        <div class="pane-heading">
+          <div><h2>Veri</h2><span id="activeRowsLabel" class="muted-label"></span></div>
+          <span class="pane-icon">▦</span>
+        </div>
+        <details id="dataTools" class="data-tools">
+          <summary>Filtrele, sırala ve hesapla</summary>
+          <div class="data-tools-content">
+          <div class="tool-section">
+            <h3>Filtrele ve sırala</h3>
+            <div class="filter-controls">
+              <select id="filterColumn" class="select-control" aria-label="Filtre sütunu"></select>
+              <select id="filterOperator" class="select-control" aria-label="Filtre koşulu">
+                <option value="equals">eşittir</option><option value="notEquals">eşit değildir</option>
+                <option value="contains">içerir</option><option value="gt">büyüktür</option>
+                <option value="gte">büyük veya eşittir</option><option value="lt">küçüktür</option>
+                <option value="lte">küçük veya eşittir</option><option value="empty">boştur</option>
+                <option value="notEmpty">boş değildir</option>
+              </select>
+              <input id="filterValue" class="text-control" type="text" placeholder="Filtre değeri" aria-label="Filtre değeri">
+              <button id="applyFilter" class="button button-light" type="button">Filtrele</button>
+              <button id="clearFilter" class="button button-light" type="button">Temizle</button>
+            </div>
+            <p id="filterError" class="error-message" role="alert" hidden></p>
+            <div class="sort-controls">
+              <label for="sortColumn">Sıralama</label>
+              <select id="sortColumn" class="select-control"></select>
+              <select id="sortDirection" class="select-control" aria-label="Sıralama yönü"><option value="asc">Artan</option><option value="desc">Azalan</option></select>
+              <button id="applySort" class="button button-light" type="button">Sırala</button>
+              <button id="clearSort" class="button button-light" type="button">Sıfırla</button>
+            </div>
+          </div>
+          <div class="tool-section computed-section">
+            <h3>Yeni değişken oluştur</h3>
+            <p class="tool-help">Sütun adlarını köşeli parantez içinde yazın. Örnek: <code>[sınav1] + [sınav2]</code></p>
+            <div class="computed-controls">
+              <input id="computedName" class="text-control" type="text" placeholder="Yeni sütun adı" aria-label="Yeni sütun adı">
+              <input id="computedExpression" class="text-control expression-input" type="text" placeholder="[sütun] * 2 + 5" aria-label="Hesaplama ifadesi">
+              <button id="addComputedColumn" class="button button-light" type="button">Değişken ekle</button>
+            </div>
+            <p id="computedError" class="error-message" role="alert" hidden></p>
+          </div>
+          </div>
+        </details>
+        <div class="table-wrap">
+          <table id="dataTable"></table>
+        </div>
+        <p class="table-note">Hücreleri doğrudan düzenleyin. Değişiklikler özgün dosyayı değiştirmez.</p>
+      </section>
+
+      <div class="workspace-main">
+      <section id="dataOverview" class="tab-panel overview-pane">
+        <div class="view-heading"><span class="view-icon">▦</span><div><h2>Veri görünümü</h2><p>Veri tablosunu düzenleyin veya analiz oluşturmak için üst menüden bir çalışma alanı seçin.</p></div></div>
+        <div class="overview-grid">
+          <article class="overview-card"><span>GÖZLEM</span><strong id="overviewRows">0</strong><small>etkin satır</small></article>
+          <article class="overview-card"><span>DEĞİŞKEN</span><strong id="overviewColumns">0</strong><small>toplam sütun</small></article>
+          <article class="overview-card"><span>EKSİK DEĞER</span><strong id="overviewMissing">0</strong><small>etkin veri aralığında</small></article>
+        </div>
+        <div class="overview-tip"><strong>Başlamak için</strong><p>Analizler sekmesinden bir test seçin. Değişken türlerini sütun başlıklarından değiştirebilir; filtreleme, sıralama ve hesaplanmış değişkenler için soldaki veri araçlarını açabilirsiniz.</p></div>
+      </section>
+      <section id="analysisTab" class="tab-panel" hidden>
+        <div class="panel-heading">
+          <div><h2>Analizler</h2><p>Analiz türünü seçin ve değişkenlerinizi belirleyin.</p></div>
+        </div>
+        <div class="analysis-layout">
+          <div class="analysis-controls">
+            <label class="field-label" for="analysisType">ANALİZ TÜRÜ</label>
+            <select id="analysisType" class="select-control">
+              <option value="descriptive">Tanımlayıcı istatistikler</option>
+              <option value="ttest">Bağımsız örneklem t-testi (Welch)</option>
+              <option value="anova">Tek yönlü ANOVA</option>
+              <option value="correlation">Pearson korelasyonu</option>
+              <option value="regression">Doğrusal regresyon</option>
+              <option value="chisquare">Ki-kare testi ve çapraz tablo</option>
+              <option value="mannwhitney">Mann–Whitney U testi</option>
+              <option value="kruskal">Kruskal–Wallis testi</option>
+              <option value="pairedT">Bağımlı örneklem t-testi</option>
+              <option value="oneSampleT">Tek örneklem t-testi</option>
+              <option value="repeatedAnova">Tekrarlı ölçümler ANOVA</option>
+              <option value="wilcoxon">Wilcoxon işaretli sıralar testi</option>
+              <option value="spearman">Spearman korelasyonu</option>
+              <option value="logistic">Lojistik regresyon</option>
+              <option value="reliability">Cronbach alfa / McDonald omega</option>
+              <option value="pca">Temel bileşenler analizi (PCA)</option>
+            </select>
+            <div id="analysisFields"></div>
+            <button id="runAnalysis" class="button button-primary" type="button">Analizi çalıştır <span>→</span></button>
+            <p class="analysis-hint">Eksik hücreler her analiz için ilgili değişkenler bazında dışarıda bırakılır.</p>
+          </div>
+          <div class="results-area">
+            <div class="results-title"><h3>Analiz sonuçları</h3><div class="result-actions"><button id="downloadResults" class="button button-light button-small" type="button" disabled>↓ CSV</button><button id="downloadWorkbook" class="button button-light button-small" type="button" disabled>↓ Excel</button><button id="downloadReport" class="button button-light button-small" type="button" disabled>↓ Rapor / PDF</button></div></div>
+            <div id="resultsContent" class="results-empty"><span class="empty-chart">∑</span><p>Sonuçları görmek için bir analiz çalıştırın.</p></div>
+          </div>
+        </div>
+        <section class="history-section">
+          <div class="results-title"><h3>Çalıştırılan analizler</h3><span id="historyCount" class="muted-label">0 analiz</span></div>
+          <div class="table-wrap"><table id="historyTable"></table></div>
+        </section>
+      </section>
+
+      <section id="chartsTab" class="tab-panel" hidden>
+        <div class="panel-heading">
+          <div><h2>Grafikler</h2><p>Değişkenleriniz için hızlı görselleştirmeler oluşturun.</p></div>
+        </div>
+        <div class="chart-toolbar">
+          <label class="chart-field"><span>GRAFİK TÜRÜ</span><select id="chartType" class="select-control"><option value="histogram">Histogram</option><option value="box">Box plot</option><option value="qq">Q–Q plot</option><option value="density">Yoğunluk eğrisi</option><option value="violin">Violin grafiği</option><option value="scatter">Dağılım grafiği</option><option value="bar">Kategori grafiği</option></select></label>
+          <div id="chartFields" class="chart-field-group"></div>
+          <div class="chart-actions"><button id="drawChart" class="button button-primary" type="button">Grafik oluştur <span>→</span></button><button id="downloadChart" class="button button-light" type="button" disabled>PNG indir</button></div>
+        </div>
+        <div class="chart-card"><canvas id="chartCanvas" aria-label="Analiz grafiği"></canvas><div id="chartEmpty" class="chart-empty">Grafiğinizi oluşturmak için değişken seçin.</div></div>
+      </section>
+      <section id="rTab" class="tab-panel" hidden>
+        <div class="panel-heading"><div><h2>R programlama ve ileri analizler</h2><p>WebAssembly R tarayıcınızda çalışır; veri dosyanız sunucuya gönderilmez.</p></div><span id="rStatus" class="status-pill">R başlatılmadı</span></div>
+        <div class="r-privacy-note">R kodu bu tarayıcı sekmesinde çalışır. WebR ve gerekli R paketlerini indirmek için internet gerekir. İleri analiz şablonları gereken paketleri ilk çalıştırmada otomatik yükler; paketler yüklenemezse hata burada gösterilir.</div>
+        <div class="r-toolbar"><button id="startR" class="button button-primary" type="button">R motorunu başlat</button><button id="installRPackages" class="button button-light" type="button" disabled>İleri analiz paketlerini yükle</button><label class="checkbox-field"><input id="autoUpdateR" type="checkbox"> Veri değişince R verisini güncelle</label></div>
+        <div class="r-analysis-panel">
+          <label class="field-label" for="advancedAnalysis">HAZIR İLERİ ANALİZ</label>
+          <select id="advancedAnalysis" class="select-control">
+            <option value="custom">R kodu (özelleştirilmiş)</option>
+            <option value="efa">Açımlayıcı faktör analizi (psych)</option>
+            <option value="cfa">Doğrulayıcı faktör analizi (lavaan)</option>
+            <option value="sem">Yapısal eşitlik modeli (lavaan)</option>
+            <option value="mediation">Aracılık analizi (mediation)</option>
+            <option value="moderation">Düzenleyicilik analizi</option>
+            <option value="meta">Meta-analiz (metafor)</option>
+            <option value="bayes">Bayesçi tek örneklem t-testi (BayesFactor)</option>
+            <option value="survival">Kaplan–Meier sağkalım analizi (survival)</option>
+            <option value="mixed">Doğrusal karma model (lme4)</option>
+            <option value="omega">McDonald omega (psych)</option>
+          </select>
+          <div id="rAnalysisFields" class="r-analysis-fields"></div>
+          <label class="field-label" for="rCode">R KODU <span>(veri setiniz <code>data</code> adıyla hazırdır)</span></label>
+          <textarea id="rCode" class="code-editor" spellcheck="false" aria-label="R kodu" placeholder="summary(data)&#10;fit <- lm(y ~ x, data = data)&#10;summary(fit)"></textarea>
+          <div class="r-toolbar"><button id="runR" class="button button-primary" type="button" disabled>R kodunu çalıştır</button><button id="clearR" class="button button-light" type="button">Temizle</button><span id="rProgress" class="muted-label"></span></div>
+          <pre id="rOutput" class="r-output" aria-live="polite">R çıktısı burada görüntülenir.</pre>
+        </div>
+      </section>
+      </div>
+          </div>
+        </div>
+      </div>
+      <section id="printReport" hidden></section>
+    </section>
+
+    <footer id="privacy">
+      <span>Biz Bize <span class="footer-separator">·</span> Veriniz için sade ve güvenli analiz alanı</span>
+      <span class="footer-privacy">🔒 Verileriniz bu cihazdan ayrılmaz</span>
+    </footer>
+  </main>
+</body>
+</html>
